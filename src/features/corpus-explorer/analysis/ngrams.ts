@@ -83,20 +83,17 @@ export function calculateNGrams(text: string): RawNGramCounts {
 }
 
 /**
- * Filter n-grams based on filter settings and reaggregate.
- * More efficient than filtering text first for large corpora.
+ * Check if a sequence contains whitespace characters.
  */
-function shouldFilterSequence(sequence: string, filters: FilterSettings): boolean {
-  // Check if sequence contains characters that should be filtered
-  for (const char of sequence) {
-    if (filters.filterWhitespace && /\s/.test(char)) {
-      return true;
-    }
-    if (filters.filterPunctuation && /[^\w\s]/.test(char)) {
-      return true;
-    }
-  }
-  return false;
+function containsWhitespace(sequence: string): boolean {
+  return /\s/.test(sequence);
+}
+
+/**
+ * Check if a sequence contains punctuation characters.
+ */
+function containsPunctuation(sequence: string): boolean {
+  return /[^\w\s]/.test(sequence);
 }
 
 /**
@@ -108,6 +105,8 @@ function normalizeSequence(sequence: string, caseSensitive: boolean): string {
 
 /**
  * Filter and reaggregate n-gram counts.
+ * Discards sequences with whitespace if filterWhitespace is enabled.
+ * Discards sequences with punctuation if filterPunctuation is enabled.
  * Returns a CountMap with both the filtered map and the total count.
  */
 function filterAndReaggregate(
@@ -118,8 +117,13 @@ function filterAndReaggregate(
   let total = 0;
 
   for (const [sequence, frequency] of counts.entries()) {
-    // Skip sequences that should be filtered
-    if (shouldFilterSequence(sequence, filters)) {
+    // Discard sequences containing whitespace if filterWhitespace is enabled
+    if (filters.filterWhitespace && containsWhitespace(sequence)) {
+      continue;
+    }
+
+    // Discard sequences containing punctuation if filterPunctuation is enabled
+    if (filters.filterPunctuation && containsPunctuation(sequence)) {
       continue;
     }
 
