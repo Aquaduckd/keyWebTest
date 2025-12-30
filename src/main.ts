@@ -11,7 +11,7 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 const panels = initializeLayout(app);
 
 // Populate the panels with initial content
-panels.header.textContent = 'KeySharp Web';
+panels.header.textContent = 'KeySharp';
 panels.leftPanel.textContent = 'Left Panel';
 panels.bottomPanel.textContent = 'Bottom Panel';
 
