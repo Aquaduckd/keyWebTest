@@ -1,6 +1,6 @@
 // N-gram analysis (monograms, bigrams, trigrams, and words)
 
-import type { NGramData, FilterSettings, WordData } from '../types';
+import type { NGramData, FilterSettings } from '../types';
 
 interface RawNGramCounts {
   monograms: Map<string, number>;
@@ -157,65 +157,6 @@ function mapToRankedArray(countMap: CountMap): NGramData[] {
   }));
 }
 
-/**
- * Convert word counts CountMap to sorted array (WordData format).
- */
-function mapToRankedWordArray(countMap: CountMap): WordData[] {
-  const entries = Array.from(countMap.map.entries());
-  
-  // Sort by frequency (descending), then by word (ascending) for ties
-  entries.sort((a, b) => {
-    if (b[1] !== a[1]) {
-      return b[1] - a[1]; // Higher frequency first
-    }
-    return a[0].localeCompare(b[0]); // Alphabetical for ties
-  });
-
-  // Return as WordData (no rank field, but we'll add it when converting to NGramData for display)
-  return entries.map(([word, frequency]) => ({
-    word,
-    frequency,
-  }));
-}
-
-/**
- * Filter and reaggregate word counts.
- * Returns a CountMap with both the filtered map and the total count.
- */
-function filterAndReaggregateWords(
-  counts: Map<string, number>,
-  filters: FilterSettings
-): CountMap {
-  const filtered = new Map<string, number>();
-  let total = 0;
-
-  for (const [word, frequency] of counts.entries()) {
-    // Check if word should be filtered (contains punctuation if filterPunctuation is enabled)
-    if (filters.filterPunctuation) {
-      // Check if word contains any punctuation
-      if (/[^\w\s]/.test(word)) {
-        continue; // Skip words with punctuation
-      }
-    }
-    
-    // Check if word should be filtered (contains whitespace if filterWhitespace is enabled)
-    if (filters.filterWhitespace) {
-      if (/\s/.test(word)) {
-        continue; // Skip words with whitespace
-      }
-    }
-    
-    // Normalize case if needed
-    const normalized = normalizeSequence(word, filters.caseSensitive);
-
-    // Reaggregate (combine counts for words that normalize to the same value)
-    const existingCount = filtered.get(normalized) || 0;
-    filtered.set(normalized, existingCount + frequency);
-    total += frequency;
-  }
-
-  return { map: filtered, total };
-}
 
 /**
  * Calculate all n-grams and words, apply filters, and return ranked results.
@@ -227,7 +168,7 @@ export function calculateFilteredNGrams(
   monograms: NGramData[];
   bigrams: NGramData[];
   trigrams: NGramData[];
-  words: WordData[];
+  words: NGramData[];
   totals: {
     monograms: number;
     bigrams: number;
@@ -242,7 +183,7 @@ export function calculateFilteredNGrams(
   const filteredMonograms = filterAndReaggregate(rawCounts.monograms, filters);
   const filteredBigrams = filterAndReaggregate(rawCounts.bigrams, filters);
   const filteredTrigrams = filterAndReaggregate(rawCounts.trigrams, filters);
-  const filteredWords = filterAndReaggregateWords(rawCounts.words, filters);
+  const filteredWords = filterAndReaggregate(rawCounts.words, filters);
 
   // Extract totals from CountMap structures
   const totals = {
@@ -257,7 +198,7 @@ export function calculateFilteredNGrams(
     monograms: mapToRankedArray(filteredMonograms),
     bigrams: mapToRankedArray(filteredBigrams),
     trigrams: mapToRankedArray(filteredTrigrams),
-    words: mapToRankedWordArray(filteredWords),
+    words: mapToRankedArray(filteredWords),
     totals,
   };
 }

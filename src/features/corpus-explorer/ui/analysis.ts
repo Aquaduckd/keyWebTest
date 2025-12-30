@@ -452,12 +452,7 @@ export function createAnalysisDisplay(
   let ngramData: NGramData[];
   let total: number;
   if (selectedType === 'words') {
-    // For words, we need to convert WordData to NGramData format
-    ngramData = results.words.map((word, index) => ({
-      sequence: word.word,
-      frequency: word.frequency,
-      rank: index + 1,
-    }));
+    ngramData = results.words;
     total = results.totals.words;
   } else {
     ngramData = results[selectedType];

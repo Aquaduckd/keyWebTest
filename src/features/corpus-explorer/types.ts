@@ -25,16 +25,11 @@ export interface NGramData {
   rank: number;
 }
 
-export interface WordData {
-  word: string;
-  frequency: number;
-}
-
 export interface AnalysisResults {
   monograms: NGramData[];
   bigrams: NGramData[];
   trigrams: NGramData[];
-  words: WordData[];
+  words: NGramData[];
   totals: {
     monograms: number;
     bigrams: number;

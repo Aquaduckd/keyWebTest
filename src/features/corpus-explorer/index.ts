@@ -78,11 +78,7 @@ function handleExportCSV(): void {
   let total: number;
   
   if (currentState.selectedNGramType === 'words') {
-    ngramData = currentState.analysis.words.map((word, index) => ({
-      sequence: word.word,
-      frequency: word.frequency,
-      rank: index + 1,
-    }));
+    ngramData = currentState.analysis.words;
     total = currentState.analysis.totals.words;
   } else {
     ngramData = currentState.analysis[currentState.selectedNGramType];
