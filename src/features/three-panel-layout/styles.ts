@@ -20,11 +20,18 @@ export function applyHeaderStyles(header: HTMLElement): void {
   header.style.alignItems = 'center';
 }
 
-export function applyContentAreaStyles(contentArea: HTMLElement): void {
-  contentArea.style.display = 'flex';
-  contentArea.style.flexDirection = 'row';
-  contentArea.style.flex = '1';
-  contentArea.style.overflow = 'hidden';
+export function applyBottomAreaStyles(bottomArea: HTMLElement): void {
+  bottomArea.style.display = 'flex';
+  bottomArea.style.flexDirection = 'row';
+  bottomArea.style.flex = '1';
+  bottomArea.style.overflow = 'hidden';
+}
+
+export function applyRightAreaStyles(rightArea: HTMLElement): void {
+  rightArea.style.display = 'flex';
+  rightArea.style.flexDirection = 'column';
+  rightArea.style.flex = '1';
+  rightArea.style.overflow = 'hidden';
 }
 
 export function applyLeftPanelStyles(leftPanel: HTMLElement): void {

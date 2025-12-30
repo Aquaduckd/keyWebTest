@@ -3,7 +3,8 @@
 import {
   applyLayoutStyles,
   applyHeaderStyles,
-  applyContentAreaStyles,
+  applyBottomAreaStyles,
+  applyRightAreaStyles,
   applyLeftPanelStyles,
   applyMainPanelStyles,
   applyBottomPanelStyles,
@@ -22,15 +23,20 @@ export function createLayoutStructure(rootElement: HTMLElement): LayoutPanels {
   header.id = 'layout-header';
   applyHeaderStyles(header);
 
-  // Create content area (contains left panel and main panel)
-  const contentArea = document.createElement('div');
-  contentArea.id = 'layout-content-area';
-  applyContentAreaStyles(contentArea);
+  // Create bottom area (contains left panel and right area with main panel and bottom panel)
+  const bottomArea = document.createElement('div');
+  bottomArea.id = 'layout-bottom-area';
+  applyBottomAreaStyles(bottomArea);
 
-  // Create left panel
+  // Create left panel (extends full height)
   const leftPanel = document.createElement('aside');
   leftPanel.id = 'layout-left-panel';
   applyLeftPanelStyles(leftPanel);
+
+  // Create right area (contains main panel and bottom panel)
+  const rightArea = document.createElement('div');
+  rightArea.id = 'layout-right-area';
+  applyRightAreaStyles(rightArea);
 
   // Create main panel
   const mainPanel = document.createElement('main');
@@ -43,12 +49,14 @@ export function createLayoutStructure(rootElement: HTMLElement): LayoutPanels {
   applyBottomPanelStyles(bottomPanel);
 
   // Assemble the structure
-  contentArea.appendChild(leftPanel);
-  contentArea.appendChild(mainPanel);
+  rightArea.appendChild(mainPanel);
+  rightArea.appendChild(bottomPanel);
+
+  bottomArea.appendChild(leftPanel);
+  bottomArea.appendChild(rightArea);
 
   rootElement.appendChild(header);
-  rootElement.appendChild(contentArea);
-  rootElement.appendChild(bottomPanel);
+  rootElement.appendChild(bottomArea);
 
   return {
     header,
