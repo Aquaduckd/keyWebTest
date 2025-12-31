@@ -44,7 +44,6 @@ export function applyTabStyles(tab: HTMLElement, isActive: boolean): void {
   tab.style.backgroundColor = isActive ? '#ffffff' : '#f8f8f8';
   tab.style.color = isActive ? '#333' : '#666';
   tab.style.borderBottom = isActive ? '2px solid #007bff' : '2px solid transparent';
-  tab.style.marginBottom = isActive ? '-2px' : '0';
   tab.style.transition = 'background-color 0.2s, color 0.2s';
   tab.style.textAlign = 'center';
   
